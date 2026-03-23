@@ -1,0 +1,19 @@
+{
+  "name": "seminar-allure-jenkins-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Small Node.js demo project for Allure Report + Jenkins seminar",
+  "scripts": {
+    "clean:reports": "powershell -NoProfile -Command \"if (Test-Path allure-results) { Remove-Item -Recurse -Force allure-results }; if (Test-Path junit) { Remove-Item -Recurse -Force junit }; if (Test-Path allure-report) { Remove-Item -Recurse -Force allure-report }\"",
+    "test": "jest --runInBand",
+    "test:ci": "jest --ci --runInBand",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report"
+  },
+  "devDependencies": {
+    "allure-commandline": "^2.34.1",
+    "allure-jest": "^3.4.1",
+    "jest": "^30.0.5",
+    "jest-junit": "^16.0.0"
+  }
+}
