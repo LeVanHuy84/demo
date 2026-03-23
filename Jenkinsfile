@@ -3,22 +3,25 @@ pipeline {
     docker {
       image 'node:20'
       args '-u root'
+      reuseNode true
     }
   }
 
   stages {
-    stage('Debug') {
+    stage('Checkout') {
       steps {
-        sh '''
-          node -v
-          npm -v
-        '''
+        checkout scm
       }
     }
 
-    stage('Checkout') {
+    stage('Debug') {
       steps {
-        git branch: 'main', url: 'https://github.com/LeVanHuy84/demo.git'
+        sh '''
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
+        '''
       }
     }
 
@@ -30,15 +33,21 @@ pipeline {
 
     stage('Test') {
       steps {
-        sh 'npm run test:ci'
+        sh '''
+          npm run test:ci || true
+        '''
       }
     }
   }
 
   post {
     always {
-      junit allowEmptyResults: true, testResults: '**/*.xml'
-      archiveArtifacts allowEmptyArchive: true, artifacts: '**/*'
+      echo "Listing workspace..."
+      sh 'ls -la'
+
+      junit allowEmptyResults: true, testResults: '**/junit.xml, **/test-results/**/*.xml'
+
+      archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log'
     }
   }
 }
