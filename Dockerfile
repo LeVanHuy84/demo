@@ -2,17 +2,30 @@ FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
-# Cài docker CLI
+# base tools
 RUN apt-get update && \
-    apt-get install -y docker.io git curl
+    apt-get install -y \
+    docker.io git curl unzip zip jq \
+    build-essential python3 python3-pip
 
-# Cài node + npm global
-RUN apt-get install -y nodejs npm
+# node (version chuẩn hơn)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
-# Cài allure-commandline
+# allure
 RUN npm install -g allure-commandline@2.34.1
-# Cài Jenkins plugins (HTML Publisher)
+
+# plugins
 RUN jenkins-plugin-cli --plugins \
-    htmlpublisher:1.31 \
-    allure-plugin:2.34.0
+    workflow-aggregator \
+    git \
+    github \
+    pipeline-stage-view \
+    docker-workflow \
+    credentials-binding \
+    ssh-agent \
+    timestamper \
+    htmlpublisher \
+    allure-jenkins-plugin
+
 USER jenkins
