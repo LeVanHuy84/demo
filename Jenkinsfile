@@ -38,22 +38,36 @@ pipeline {
         '''
       }
     }
+
+    stage('Generate Allure Report') {
+      steps {
+        sh '''
+          echo "Generating Allure report..."
+          allure generate allure-results --clean -o allure-report || true
+        '''
+      }
+    }
   }
 
   post {
     always {
-      echo "Listing workspace..."
-      sh 'ls -la'
-
+      echo "=== Collecting Test Results ==="
+      
       junit allowEmptyResults: true, testResults: '**/junit.xml, **/test-results/**/*.xml'
 
-      archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log'
+      archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log, allure-results/**, allure-report/**'
 
       allure([
         includeProperties: false,
         jdk: '',
         results: [[path: 'allure-results']]
       ])
+      
+      script {
+        echo "=== Build Summary ==="
+        sh 'echo "allure-results contents:"; ls -la allure-results/ || echo "No allure-results folder"'
+        sh 'echo "allure-report contents:"; ls -la allure-report/ || echo "No allure-report folder"'
+      }
     }
   }
 }

@@ -12,5 +12,12 @@ module.exports = {
         outputName: 'junit.xml',
       },
     ],
+    [
+      'allure-jest/reporter',
+      {
+        resultsDir: 'allure-results',
+        suiteTitle: true,
+      },
+    ],
   ],
 };
