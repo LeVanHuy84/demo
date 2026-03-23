@@ -2,35 +2,33 @@ pipeline {
   agent {
     docker {
       image 'node:20'
+      args '-u root'
     }
   }
 
   stages {
+    stage('Debug') {
+      steps {
+        sh '''
+          node -v
+          npm -v
+        '''
+      }
+    }
+
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/LeVanHuy84/demo.git'
       }
     }
 
-    stage('Prepare') {
+    stage('Install') {
       steps {
-        sh 'ls -la'
+        sh 'npm ci'
       }
     }
 
-    stage('Install dependencies') {
-      steps {
-        sh '''
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-        '''
-      }
-    }
-
-    stage('Run tests') {
+    stage('Test') {
       steps {
         sh 'npm run test:ci'
       }
@@ -39,19 +37,8 @@ pipeline {
 
   post {
     always {
-      script {
-        sh 'ls -la'
-
-        junit allowEmptyResults: true, testResults: 'junit/junit.xml'
-
-        try {
-          allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
-        } catch (Exception e) {
-          echo 'Allure plugin not installed. Skipping.'
-        }
-
-        archiveArtifacts allowEmptyArchive: true, artifacts: 'allure-results/**,junit/**,coverage/**'
-      }
+      junit allowEmptyResults: true, testResults: '**/*.xml'
+      archiveArtifacts allowEmptyArchive: true, artifacts: '**/*'
     }
   }
 }
