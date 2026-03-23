@@ -57,11 +57,7 @@ pipeline {
 
       archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log, allure-results/**, allure-report/**'
 
-      allure([
-        includeProperties: false,
-        jdk: '',
-        results: [[path: 'allure-results']]
-      ])
+      allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
       
       script {
         echo "=== Build Summary ==="
