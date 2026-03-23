@@ -57,7 +57,13 @@ pipeline {
 
       archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log, allure-results/**, allure-report/**'
 
-      allure results: [[path: 'allure-results']]
+      script {
+        try {
+          allure()
+        } catch (e) {
+          echo "Allure report generation skipped: ${e.message}"
+        }
+      }
       
       script {
         echo "=== Build Summary ==="
