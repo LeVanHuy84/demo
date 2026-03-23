@@ -11,5 +11,8 @@ RUN apt-get install -y nodejs npm
 
 # Cài allure-commandline
 RUN npm install -g allure-commandline@2.34.1
-
+# Cài Jenkins plugins (HTML Publisher)
+RUN jenkins-plugin-cli --plugins \
+    htmlpublisher:1.31 \
+    allure-plugin:2.34.0
 USER jenkins

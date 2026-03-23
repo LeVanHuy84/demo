@@ -57,10 +57,19 @@ pipeline {
 
       archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log, allure-results/**, allure-report/**'
       
+      // Publish Allure Report as HTML
+      publishHTML([
+        reportDir: 'allure-report',
+        reportFiles: 'index.html',
+        reportName: 'Allure Report',
+        keepAll: true,
+        alwaysLinkToLastBuild: true
+      ])
+      
       script {
-        echo "=== Build Complete ==="
-        echo "✓ Test results: junit/"
-        echo "✓ Allure report: allure-report/index.html"
+        echo "=== Build Complete ===:"
+        echo "✓ Test Results: Available in build page"
+        echo "✓ Allure Report: Click 'Allure Report' link above"
       }
     }
   }
