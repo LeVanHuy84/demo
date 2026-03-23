@@ -48,6 +48,12 @@ pipeline {
       junit allowEmptyResults: true, testResults: '**/junit.xml, **/test-results/**/*.xml'
 
       archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log'
+
+      allure([
+        includeProperties: false,
+        jdk: '',
+        results: [[path: 'allure-results']]
+      ])
     }
   }
 }
