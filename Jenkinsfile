@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/LeVanHuy84/demo.git'
+        git branch: 'main', url: 'https://github.com/LeVanHuy84/demo.git'
       }
     }
 
@@ -35,7 +35,6 @@ pipeline {
 
   post {
     always {
-      // ✅ đảm bảo có workspace context
       script {
         sh 'ls -la'
 
