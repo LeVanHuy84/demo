@@ -1,5 +1,5 @@
 module.exports = {
-  testEnvironment: 'allure-jest/node',
+  testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
@@ -10,13 +10,6 @@ module.exports = {
       {
         outputDirectory: 'junit',
         outputName: 'junit.xml',
-      },
-    ],
-    [
-      'allure-jest/reporter',
-      {
-        resultsDir: 'allure-results',
-        suiteTitle: true,
       },
     ],
   ],

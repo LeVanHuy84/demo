@@ -42,11 +42,17 @@ pipeline {
     stage('Generate Allure Report') {
       steps {
         sh '''
-          echo "Generating Allure report..."
+          echo "Checking allure-results folder..."
+          ls -la allure-results/ || echo "No allure-results folder"
+          
+          echo "Generating Allure Report..."
           allure generate allure-results --clean -o allure-report || true
+          
+          echo "Allure report generated at allure-report/"
         '''
       }
     }
+
   }
 
   post {
@@ -56,20 +62,18 @@ pipeline {
       junit allowEmptyResults: true, testResults: '**/junit.xml, **/test-results/**/*.xml'
 
       archiveArtifacts allowEmptyArchive: true, artifacts: '**/coverage/**, **/*.log, allure-results/**, allure-report/**'
-
-      script {
-        try {
-          allure()
-        } catch (e) {
-          echo "Allure report generation skipped: ${e.message}"
-        }
-      }
       
       script {
-        echo "=== Build Summary ==="
-        sh 'echo "allure-results contents:"; ls -la allure-results/ || echo "No allure-results folder"'
-        sh 'echo "allure-report contents:"; ls -la allure-report/ || echo "No allure-report folder"'
+        echo "=== Publishing Allure Report ==="
+        sh 'echo "Allure report contents:"; ls -la allure-report/ 2>/dev/null || echo "No allure-report folder generated yet"'
       }
+
+      // Publish Allure Report
+      publishHTML([
+        reportDir: 'allure-report',
+        reportFiles: 'index.html',
+        reportName: 'Allure Report'
+      ])
     }
   }
 }
