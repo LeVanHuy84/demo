@@ -26,6 +26,7 @@ RUN jenkins-plugin-cli --plugins \
     ssh-agent \
     timestamper \
     htmlpublisher \
-    allure-jenkins-plugin
+    allure-jenkins-plugin \
+    junit
 
 USER jenkins

@@ -1,5 +1,5 @@
 const { add, divide, totalPrice } = require('../src/calculator');
-const allure = require('allure-js-commons');
+const { allure } = require('allure-jest');
 
 describe('Calculator demo for Allure + Jenkins', () => {
   test('add two numbers', async () => {

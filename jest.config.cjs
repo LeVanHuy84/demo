@@ -1,5 +1,7 @@
 module.exports = {
   testEnvironment: 'node',
+  testRunner: 'jest-circus/runner',
+  setupFilesAfterEnv: ['allure-jest/setup'],
   roots: ['<rootDir>/tests'],
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
